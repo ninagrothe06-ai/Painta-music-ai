@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const PORT = process.env.PORT || 3000;
-const PUBLIC = path.join(__dirname, "public");
+const PUBLIC = _dirname;
 
 function sendJson(res, status, obj) {
   res.writeHead(status, {
