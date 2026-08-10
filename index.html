@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#8b5cf6">
+
+<title>Painta Music AI</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left,#7c3aed55,transparent 35%),
+    radial-gradient(circle at top right,#ec489955,transparent 35%),
+    #0d0814;
+}
+
+.app {
+  max-width: 700px;
+  margin: auto;
+  padding: 18px;
+}
+
+header {
+  padding: 15px 5px 25px;
+}
+
+header h2 {
+  margin: 0;
+}
+
+header small {
+  color: #b9aaca;
+}
+
+.hero {
+  padding: 28px 22px;
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg,#8b5cf633,#ec489933,#fb923c22);
+  border: 1px solid #ffffff22;
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  font-size: 45px;
+  line-height: .95;
+  margin: 15px 0;
+}
+
+.hero span {
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.hero p {
+  color: #cbbfd8;
+}
+
+.card {
+  background: #171020dd;
+  border: 1px solid #ffffff1c;
+  border-radius: 24px;
+  padding: 20px;
+}
+
+label {
+  display: block;
+  margin: 17px 0 7px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #cbbfd8;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  border: 1px solid #ffffff22;
+  border-radius: 14px;
+  background: #ffffff0d;
+  color: white;
+  padding: 14px;
+  font-size: 16px;
+}
+
+textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+option {
+  color: black;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+button {
+  width: 100%;
+  border: 0;
+  border-radius: 15px;
+  padding: 16px;
+  margin-top: 20px;
+  font-size: 17px;
+  font-weight: bold;
+  color: white;
+  background:
+    linear-gradient(90deg,#8b5cf6,#ec4899,#fb923c);
+}
+
+button:disabled {
+  opacity: .6;
+}
+
+#status {
+  text-align: center;
+  color: #cbbfd8;
+  padding: 16px;
+}
+
+#error {
+  margin-top: 15px;
+  padding: 13px;
+  border-radius: 13px;
+  background: #ef444422;
+  display: none;
+}
+
+#result {
+  display: none;
+  margin-top: 18px;
+  text-align: center;
+}
+
+.cover {
+  width: 180px;
+  height: 180px;
+  margin: 10px auto 20px;
+  border-radius: 30px;
+  display: grid;
+  place-items: center;
+  font-size: 65px;
+  font-weight: bold;
+  background:
+    linear-gradient(145deg,#fb923c,#ec4899,#8b5cf6);
+}
+
+audio {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.download {
+  display: block;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  background: #ffffff15;
+  border: 1px solid #ffffff22;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #8f829c;
+  font-size: 12px;
+}
+
+@media(max-width:500px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+<h2>🎨 Painta Music AI</h2>
+<small>Dein KI Music Studio</small>
+</header>
+
+<section class="hero">
+<span>✨ AI MUSIC CREATOR</span>
+
+<h1>Mach deine<br>Ideen hörbar.</h1>
+
+<p>
+Schreib deinen eigenen Song, wähle Stil und Stimmen
+und lass Painta Music daraus Musik erschaffen.
+</p>
+</section>
+
+<section class="card">
+
+<label>🎵 Songtitel</label>
+
+<input
+id="title"
+placeholder="z. B. Kreative Schüsse"
+>
+
+<label>📝 Songtext</label>
+
+<textarea
+id="lyrics"
+placeholder="[Verse 1]
+
+Dein Songtext...
+
+[Chorus]
+
+Dein Refrain..."
+></textarea>
+
+<div class="row">
+
+<div>
+
+<label>🎧 Musikstil</label>
+
+<select id="style">
+<option>Pop</option>
+<option>K-Pop</option>
+<option>Dark Pop</option>
+<option>Electro Pop</option>
+<option>Hip-Hop</option>
+<option>Cinematic</option>
+<option>Ballade</option>
+<option>Jazz</option>
+<option>Rock</option>
+</select>
+
+</div>
+
+<div>
+
+<label>🎤 Stimme</label>
+
+<select id="voice">
+<option value="female">Weiblich</option>
+<option value="male">Männlich</option>
+<option value="duet">Duett ♀ + ♂</option>
+<option value="instrumental">Instrumental</option>
+</select>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div>
+
+<label>⏱️ Songlänge</label>
+
+<select id="duration">
+<option value="clip">30 Sekunden</option>
+<option value="90">ca. 90 Sekunden</option>
+<option value="120" selected>ca. 2 Minuten</option>
+<option value="180">ca. 3 Minuten</option>
+</select>
+
+</div>
+
+<div>
+
+<label>🌍 Sprache</label>
+
+<select id="language">
+<option>Deutsch</option>
+<option>Englisch</option>
+<option>Japanisch</option>
+<option>Koreanisch</option>
+<option>Französisch</option>
+<option>Spanisch</option>
+</select>
+
+</div>
+
+</div>
+
+<label>💜 Stimmung & Sound</label>
+
+<input
+id="mood"
+placeholder="emotional, düster, kraftvoll..."
+>
+
+<label>🎛️ Zusätzliche Wünsche</label>
+
+<textarea
+id="extra"
+style="min-height:100px"
+placeholder="Ruhiges Intro, großer Refrain, dramatische Bridge..."
+></textarea>
+
+<button id="generate">
+✨ Song generieren
+</button>
+
+<div id="status"></div>
+
+<div id="error"></div>
+
+</section>
+
+<section class="card" id="result">
+
+<div class="cover">
+♫
+</div>
+
+<h2 id="resultTitle">
+Painta Song
+</h2>
+
+<p id="resultInfo"></p>
+
+<audio
+id="player"
+controls>
+</audio>
+
+<a
+id="download"
+class="download"
+download="painta-song.mp3">
+⬇️ Song speichern
+</a>
+
+</section>
+
+<footer>
+Painta Music AI 🎨🎵
+</footer>
+
+</div>
+
+<script>
+
+const generate =
+document.getElementById("generate");
+
+const status =
+document.getElementById("status");
+
+const error =
+document.getElementById("error");
+
+const result =
+document.getElementById("result");
+
+const voiceInstructions = {
+
+female:
+"One expressive adult female lead vocalist.",
+
+male:
+"One expressive adult male lead vocalist.",
+
+duet:
+"A duet with two clearly distinct adult singers, one female and one male. Alternate verses and sing selected chorus lines together.",
+
+instrumental:
+"Instrumental only. No vocals."
+
+};
+
+generate.onclick = async () => {
+
+error.style.display = "none";
+result.style.display = "none";
+
+const voice =
+document.getElementById("voice").value;
+
+const lyrics =
+document.getElementById("lyrics").value.trim();
+
+if (
+voice !== "instrumental" &&
+!lyrics
+) {
+
+error.textContent =
+"Bitte zuerst einen Songtext eingeben.";
+
+error.style.display = "block";
+
+return;
+
+}
+
+generate.disabled = true;
+
+status.textContent =
+"🎨 Painta komponiert deinen Song...";
+
+const data = {
+
+title:
+document.getElementById("title").value ||
+"Mein Painta Song",
+
+lyrics,
+
+style:
+document.getElementById("style").value,
+
+voice,
+
+voiceInstruction:
+voiceInstructions[voice],
+
+duration:
+document.getElementById("duration").value,
+
+language:
+document.getElementById("language").value,
+
+mood:
+document.getElementById("mood").value,
+
+extra:
+document.getElementById("extra").value
+
+};
+
+try {
+
+const response =
+await fetch("/api/generate", {
+
+method: "POST",
+
+headers: {
+"Content-Type": "application/json"
+},
+
+body:
+JSON.stringify(data)
+
+});
+
+const output =
+await response.json();
+
+if (!response.ok) {
+
+throw new Error(
+output.error ||
+"Song konnte nicht erstellt werden."
+);
+
+}
+
+const bytes =
+Uint8Array.from(
+atob(output.audioBase64),
+c => c.charCodeAt(0)
+);
+
+const blob =
+new Blob(
+[bytes],
+{
+type:
+output.mimeType ||
+"audio/mpeg"
+}
+);
+
+const audioURL =
+URL.createObjectURL(blob);
+
+document.getElementById("player").src =
+audioURL;
+
+document.getElementById("download").href =
+audioURL;
+
+document.getElementById("resultTitle").textContent =
+data.title;
+
+document.getElementById("resultInfo").textContent =
+data.style +
+" • " +
+document.getElementById("voice")
+.selectedOptions[0].textContent;
+
+result.style.display =
+"block";
+
+status.textContent =
+"🎉 Dein Song ist fertig!";
+
+result.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+catch(err) {
+
+error.textContent =
+err.message;
+
+error.style.display =
+"block";
+
+status.textContent = "";
+
+}
+
+finally {
+
+generate.disabled = false;
+
+}
+
+};
+
+</script>
+
+</body>
+  </html>
